@@ -7,6 +7,9 @@ import (
 )
 
 func TestExample1(t *testing.T) {
+    if testing.Short() {
+        t.Skip()
+    }
     out, err := exec.Command("dugo", "example1").Output()
     if err != nil {
         t.Error("Expected nil, got", err)
