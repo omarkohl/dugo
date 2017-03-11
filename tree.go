@@ -14,5 +14,11 @@ func NewFileTreeNode(
     isDir bool,
     children []FileTreeNode,
 ) *FileTreeNode {
-    return &FileTreeNode{}
+    return &FileTreeNode{
+        name: name,
+        size: size,
+        cummulativeSize: size,
+        isDir: isDir,
+        children: children,
+    }
 }
