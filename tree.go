@@ -8,6 +8,8 @@ type FileTreeNode struct {
     children        []FileTreeNode
 }
 
+// Constructor function for FileTreeNode. Use this instead of instantiating
+// FileTreeNode directly to ensure the cummulativeSize is calculated correctly.
 func NewFileTreeNode(
     name string,
     size int64,
