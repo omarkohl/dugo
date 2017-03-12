@@ -8,9 +8,9 @@ import (
 
 // Test that a single FileTreeNode is constructed correctly
 func TestSingleTreeNode(t *testing.T) {
-    node := NewFileTreeNode("/test/asdf", 100, false, nil)
+    node := NewFileTreeNode("asdf", 100, false, nil)
     expected := FileTreeNode{
-        name: "/test/asdf",
+        name: "asdf",
         size: 100,
         cummulativeSize: 100,
         isDir: false,
@@ -31,9 +31,9 @@ func TestTree(t *testing.T) {
     children[node1.name] = node1
     children[node2.name] = node2
     children[node3.name] = node3
-    nodeParent := NewFileTreeNode("/test", 4096, true, children)
+    nodeParent := NewFileTreeNode("test", 4096, true, children)
     expected := FileTreeNode{
-        name: "/test",
+        name: "test",
         size: 4096,
         cummulativeSize: 4596,
         isDir: true,
