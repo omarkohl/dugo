@@ -44,3 +44,27 @@ func TestTree(t *testing.T) {
         t.Error(expectedMsg)
     }
 }
+
+// Test the findDescendant method
+func TestFindDescendant(t *testing.T) {
+    node1 := NewFileTreeNode("asdf", 100, false, nil)
+    node2 := NewFileTreeNode("asdf2", 200, false, nil)
+    node3 := NewFileTreeNode("asdf3", 200, false, nil)
+    children := make(map[string]*FileTreeNode, 3)
+    children[node1.name] = node1
+    children[node2.name] = node2
+    children[node3.name] = node3
+    dirTest := NewFileTreeNode("test", 4096, true, children)
+    dirTopLevel := NewFileTreeNode(
+        "top-level",
+        4096,
+        true,
+        map[string]*FileTreeNode{dirTest.name: dirTest},
+    )
+    fmt.Println(dirTopLevel)
+    result := dirTopLevel.findDescendant("top-level/test/asdf2")
+    if node2 != result {
+        expectedMsg := fmt.Sprintf("Expected %v and got %v", node2, result)
+        t.Error(expectedMsg)
+    }
+}
