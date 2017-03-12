@@ -5,7 +5,7 @@ type FileTreeNode struct {
     size            int64
     cummulativeSize int64
     isDir           bool
-    children        []FileTreeNode
+    children        map[string]*FileTreeNode
 }
 
 // Constructor function for FileTreeNode. Use this instead of instantiating
@@ -14,8 +14,11 @@ func NewFileTreeNode(
     name string,
     size int64,
     isDir bool,
-    children []FileTreeNode,
+    children map[string]*FileTreeNode,
 ) *FileTreeNode {
+    if children == nil {
+        children = make(map[string]*FileTreeNode)
+    }
     cummulativeSize := size
     for _, v := range children {
         cummulativeSize += v.size

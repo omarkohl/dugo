@@ -8,29 +8,29 @@ import (
 
 // Test that a single FileTreeNode is constructed correctly
 func TestSingleTreeNode(t *testing.T) {
-    node := NewFileTreeNode("/test/asdf", 100, false, []FileTreeNode{})
+    node := NewFileTreeNode("/test/asdf", 100, false, nil)
     expected := FileTreeNode{
         name: "/test/asdf",
         size: 100,
         cummulativeSize: 100,
         isDir: false,
-        children: []FileTreeNode{},
+        children: make(map[string]*FileTreeNode),
     }
     if ! reflect.DeepEqual(*node, expected) {
-        expectedMsg := fmt.Sprintf("Expected %v and got %v", expected, node)
+        expectedMsg := fmt.Sprintf("Expected %v and got %v", expected, *node)
         t.Error(expectedMsg)
     }
 }
 
 // Test that a tree is constructed correctly and sizes are added up as expected
 func TestTree(t *testing.T) {
-    node1 := NewFileTreeNode("/test/asdf", 100, false, []FileTreeNode{})
-    node2 := NewFileTreeNode("/test/asdf2", 200, false, []FileTreeNode{})
-    node3 := NewFileTreeNode("/test/asdf3", 200, false, []FileTreeNode{})
-    children := make([]FileTreeNode, 3)
-    children[0] = *node1
-    children[1] = *node2
-    children[2] = *node3
+    node1 := NewFileTreeNode("asdf", 100, false, nil)
+    node2 := NewFileTreeNode("asdf2", 200, false, nil)
+    node3 := NewFileTreeNode("asdf3", 200, false, nil)
+    children := make(map[string]*FileTreeNode, 3)
+    children[node1.name] = node1
+    children[node2.name] = node2
+    children[node3.name] = node3
     nodeParent := NewFileTreeNode("/test", 4096, true, children)
     expected := FileTreeNode{
         name: "/test",
