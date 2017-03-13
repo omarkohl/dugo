@@ -4,6 +4,8 @@ import (
     "fmt"
     "path/filepath"
     "os"
+    "flag"
+    "strings"
 )
 
 var Walk = filepath.Walk
@@ -11,9 +13,8 @@ var Walk = filepath.Walk
 func buildTree(root string) *FileTreeNode {
     var tree *FileTreeNode
     visit := func (path string, f os.FileInfo, err error) error {
-        fmt.Printf("Visiting %s with size %d\n", path, f.Size())
         if path == root {
-            tree = NewFileTreeNode(path, f.Size(), f.IsDir(), nil)
+            tree = NewFileTreeNode(f.Name(), f.Size(), f.IsDir(), nil)
         } else {
             dir := filepath.Dir(path)
             base := filepath.Base(path)
@@ -31,6 +32,17 @@ func buildTree(root string) *FileTreeNode {
     return tree
 }
 
+func printTree(tree *FileTreeNode, indent int) {
+    fmt.Printf("%s%s\n", strings.Repeat(" ", indent), tree.name)
+    for _, child := range tree.children {
+        printTree(child, indent + 2)
+    }
+}
+
 func main() {
     fmt.Println("This is dugo (Disk Usage with Go)!")
+    flag.Parse()
+    root := flag.Arg(0)
+    tree := buildTree(root)
+    printTree(tree, 0)
 }
