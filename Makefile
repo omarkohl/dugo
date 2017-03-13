@@ -5,7 +5,7 @@ all:
 	@printf "test-unit              Run unit tests\n"
 
 build:
-	go build dugo.go
+	go build dugo.go tree.go
 
 clean:
 	rm -f dugo
