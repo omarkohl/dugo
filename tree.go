@@ -66,3 +66,9 @@ func (n *FileTreeNode) recalculateCummulativeSize() {
     }
     n.cummulativeSize = total
 }
+
+func (n *FileTreeNode) getBiggestDirsAndFiles(count int) ([]*FileTreeNode, []*FileTreeNode){
+    topDirs := make([]*FileTreeNode, count)
+    topFiles := make([]*FileTreeNode, count)
+    return topDirs, topFiles
+}

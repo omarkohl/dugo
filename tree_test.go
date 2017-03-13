@@ -124,3 +124,35 @@ func TestRecalculateCummulativeSize(t *testing.T) {
         t.Error(fmt.Sprintf("Expected 4896 but got %v", dir2.cummulativeSize))
     }
 }
+
+
+func TestGetBiggestDirsAndFiles(t *testing.T) {
+    dir1 := NewFileTreeNode("dir1", 4096, true, nil)
+    dir2 := NewFileTreeNode("dir2", 4096, true, nil)
+    dir3 := NewFileTreeNode("dir3", 4096, true, nil)
+    dir4 := NewFileTreeNode("dir4", 4096, true, nil)
+    file1 := NewFileTreeNode("file1", 8000, false, nil)
+    file2 := NewFileTreeNode("file2", 10000, false, nil)
+    dir1.children[dir2.name] = dir2
+    dir1.children[dir3.name] = dir3
+    dir1.children[dir4.name] = dir4
+    dir2.children[file1.name] = file1
+    dir3.children[file2.name] = file2
+    dir1.recalculateCummulativeSize()
+    // Structure:
+    // dir1
+    //   dir2
+    //     file1
+    //   dir3
+    //     file2
+    //   dir4
+    dirs, files := dir1.getBiggestDirsAndFiles(5)
+    expectedDirs := []*FileTreeNode{dir1, dir3, dir2, dir4}
+    if ! reflect.DeepEqual(dirs, expectedDirs) {
+        t.Error(fmt.Sprintf("Expected %v but got %v", expectedDirs, dirs))
+    }
+    expectedFiles := []*FileTreeNode{file2, file1}
+    if ! reflect.DeepEqual(files, expectedFiles) {
+        t.Error(fmt.Sprintf("Expected %v but got %v", expectedFiles, files))
+    }
+}
