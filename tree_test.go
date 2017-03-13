@@ -84,3 +84,22 @@ func TestFindDescendantError(t *testing.T) {
         t.Error(fmt.Sprintf("Expected nil and instead got %v", result))
     }
 }
+
+// Verify findDescendant returns an error if a key doesn't exist
+func TestFindDescendantError2(t *testing.T) {
+    node1 := NewFileTreeNode("asdf", 100, false, nil)
+    parent := NewFileTreeNode(
+        "parent",
+        4096,
+        true,
+        map[string]*FileTreeNode{node1.name: node1},
+    )
+    // Correct structure is parent/asdf . parent/wrong doesn't exist
+    result, err := parent.findDescendantStrPath("parent/wrong")
+    if err == nil {
+        t.Error("Expected an error and got nil")
+    }
+    if result != nil {
+        t.Error(fmt.Sprintf("Expected nil and instead got %v", result))
+    }
+}
