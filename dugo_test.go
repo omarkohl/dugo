@@ -33,21 +33,21 @@ func TestBuildTree(t *testing.T) {
     }
     tree := buildTree("example_dir")
     if tree == nil {
-        t.Error("Expected a tree and got nil")
+        t.Fatal("Expected a tree and got nil")
     }
     if tree.name != "example_dir" {
-        t.Error(fmt.Sprintf("Expected 'example_dir' and got %v", tree.name))
+        t.Fatal(fmt.Sprintf("Expected 'example_dir' and got %v", tree.name))
     }
     if len(tree.children) != 1 {
-        t.Error(fmt.Sprintf("Expected 1 child and got %v", len(tree.children)))
+        t.Fatal(fmt.Sprintf("Expected 1 child and got %v", len(tree.children)))
     }
     if len(tree.children["subdir"].children) != 1 {
-        t.Error(fmt.Sprintf("Expected 1 child and got %v", len(tree.children["subdir"].children)))
+        t.Fatal(fmt.Sprintf("Expected 1 child and got %v", len(tree.children["subdir"].children)))
     }
     if tree.children["subdir"].children["file.txt"].name != "file.txt" {
-        t.Error(fmt.Sprintf("Expected 'file.txt' and got %v", tree.children["subdir"].children["file.txt"].name))
+        t.Fatal(fmt.Sprintf("Expected 'file.txt' and got %v", tree.children["subdir"].children["file.txt"].name))
     }
     if tree.cummulativeSize != 8500 {
-        t.Error(fmt.Sprintf("Expected 8500 and got %v", tree.cummulativeSize))
+        t.Fatal(fmt.Sprintf("Expected 8500 and got %v", tree.cummulativeSize))
     }
 }

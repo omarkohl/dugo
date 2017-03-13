@@ -8,7 +8,7 @@ import (
 var Walk = filepath.Walk
 
 func buildTree(root string) *FileTreeNode {
-    return nil
+    return NewFileTreeNode(root, 111, true, nil)
 }
 
 func main() {
