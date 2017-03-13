@@ -1,6 +1,7 @@
 package main
 
 import (
+    "fmt"
     "os"
     "strings"
     "errors"
@@ -45,7 +46,11 @@ func (n *FileTreeNode) findDescendant(pathList []string) (*FileTreeNode, error) 
     if len(pathList) == 1 {
         return n, nil
     }
-    return n.children[pathList[1]].findDescendant(pathList[1:])
+    child, ok := n.children[pathList[1]]
+    if ! ok {
+        return nil, errors.New(fmt.Sprintf("Node %v has no child %v", n, pathList[1]))
+    }
+    return child.findDescendant(pathList[1:])
 }
 
 func (n *FileTreeNode) findDescendantStrPath(path string) (*FileTreeNode, error) {
