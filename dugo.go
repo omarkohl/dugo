@@ -22,7 +22,7 @@ func buildTree(root string) *FileTreeNode {
             if err != nil {
                 fmt.Printf("Error! %v\n", err)
             }
-            node := NewFileTreeNode(base, f.Size(), f.IsDir(), nil)
+            node := NewFileTreeNode(f.Name(), f.Size(), f.IsDir(), nil)
             descendant.children[base] = node
         }
         return nil
