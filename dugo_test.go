@@ -10,13 +10,14 @@ import (
 
 type fileInfoMock struct {
     size int64
+    isDir bool
 }
 
-func (fs fileInfoMock) Size() int64       { return fs.size }
+func (fs fileInfoMock) Size() int64        { return fs.size }
 func (fs fileInfoMock) Mode() os.FileMode  { return 777 }
 func (fs fileInfoMock) ModTime() time.Time { return time.Now() }
-func (fs fileInfoMock) Sys() interface{}  { return nil }
-func (fs fileInfoMock) IsDir() bool        { return false }
+func (fs fileInfoMock) Sys() interface{}   { return nil }
+func (fs fileInfoMock) IsDir() bool        { return fs.isDir }
 func (fs fileInfoMock) Name() string       { return "mock" }
 
 // Verify the buildTree function returns a directory tree
@@ -25,16 +26,28 @@ func TestBuildTree(t *testing.T) {
     oldWalk := Walk
     defer func() { Walk = oldWalk }()
     Walk = func (root string, walkFn filepath.WalkFunc) error {
-        info := fileInfoMock{size: 4096}
-        walkFn(root, info, nil)
-        walkFn("example_dir/subdir", info, nil)
-        walkFn("example_dir/subdir/file.txt", info, nil)
+        walkFn(
+            "example_dir",
+            fileInfoMock{size: 4096, isDir: true},
+            nil,
+        )
+        walkFn(
+            "example_dir/subdir",
+            fileInfoMock{size: 4096, isDir: true},
+            nil,
+        )
+        walkFn(
+            "example_dir/subdir/file.txt",
+            fileInfoMock{size: 308, isDir: false},
+            nil,
+        )
         return nil
     }
     tree := buildTree("example_dir")
     if tree == nil {
         t.Fatal("Expected a tree and got nil")
     }
+    fmt.Println(tree)
     if tree.name != "example_dir" {
         t.Fatal(fmt.Sprintf("Expected 'example_dir' and got %v", tree.name))
     }
