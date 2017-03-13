@@ -62,7 +62,7 @@ func TestFindDescendant(t *testing.T) {
         map[string]*FileTreeNode{dirTest.name: dirTest},
     )
     fmt.Println(dirTopLevel)
-    result := dirTopLevel.findDescendant("top-level/test/asdf2")
+    result := dirTopLevel.findDescendantStrPath("top-level/test/asdf2")
     if node2 != result {
         expectedMsg := fmt.Sprintf("Expected %v and got %v", node2, result)
         t.Error(expectedMsg)

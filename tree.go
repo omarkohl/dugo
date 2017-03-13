@@ -1,5 +1,10 @@
 package main
 
+import (
+    "os"
+    "strings"
+)
+
 type FileTreeNode struct {
     name            string
     size            int64
@@ -30,4 +35,20 @@ func NewFileTreeNode(
         isDir: isDir,
         children: children,
     }
+}
+
+func (n *FileTreeNode) findDescendant(pathList []string) *FileTreeNode {
+    if pathList[0] != n.name {
+        // TODO Error
+        return nil
+    }
+    if len(pathList) == 1 {
+        return n
+    }
+    return n.children[pathList[1]].findDescendant(pathList[1:])
+}
+
+func (n *FileTreeNode) findDescendantStrPath(path string) *FileTreeNode {
+    pathList := strings.Split(path, string(os.PathSeparator))
+    return n.findDescendant(pathList)
 }
