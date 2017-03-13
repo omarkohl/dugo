@@ -103,3 +103,24 @@ func TestFindDescendantError2(t *testing.T) {
         t.Error(fmt.Sprintf("Expected nil and instead got %v", result))
     }
 }
+
+
+// Verify recalculateCummulativeSize computes the correct size
+func TestRecalculateCummulativeSize(t *testing.T) {
+    dir1 := NewFileTreeNode("dir1", 4096, true, nil)
+    dir2 := NewFileTreeNode("dir2", 4096, true, nil)
+    file1 := NewFileTreeNode("file1", 800, false, nil)
+    dir1.children[dir2.name] = dir2
+    dir2.children[file1.name] = file1
+    // Structure: dir1/dir2/file1
+    if dir1.cummulativeSize != 4096 {
+        t.Error(fmt.Sprintf("Expected 4096 but got %v", dir1.cummulativeSize))
+    }
+    dir1.recalculateCummulativeSize()
+    if dir1.cummulativeSize != 8992 {
+        t.Error(fmt.Sprintf("Expected 8992 but got %v", dir1.cummulativeSize))
+    }
+    if dir2.cummulativeSize != 4896 {
+        t.Error(fmt.Sprintf("Expected 4896 but got %v", dir2.cummulativeSize))
+    }
+}
