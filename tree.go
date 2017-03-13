@@ -57,3 +57,12 @@ func (n *FileTreeNode) findDescendantStrPath(path string) (*FileTreeNode, error)
     pathList := strings.Split(path, string(os.PathSeparator))
     return n.findDescendant(pathList)
 }
+
+func (n *FileTreeNode) recalculateCummulativeSize() {
+    total := n.size
+    for _, v := range n.children {
+        v.recalculateCummulativeSize()
+        total += v.cummulativeSize
+    }
+    n.cummulativeSize = total
+}
