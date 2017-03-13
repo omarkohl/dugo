@@ -61,10 +61,26 @@ func TestFindDescendant(t *testing.T) {
         true,
         map[string]*FileTreeNode{dirTest.name: dirTest},
     )
-    fmt.Println(dirTopLevel)
-    result := dirTopLevel.findDescendantStrPath("top-level/test/asdf2")
+    result, err := dirTopLevel.findDescendantStrPath("top-level/test/asdf2")
     if node2 != result {
         expectedMsg := fmt.Sprintf("Expected %v and got %v", node2, result)
         t.Error(expectedMsg)
+    }
+    if err != nil {
+        expectedMsg := fmt.Sprintf("Expected no error and got %v", err)
+        t.Error(expectedMsg)
+    }
+}
+
+
+// Verify findDescendant returns an error if top level path doesn't match
+func TestFindDescendantError(t *testing.T) {
+    node1 := NewFileTreeNode("asdf", 100, false, nil)
+    result, err := node1.findDescendantStrPath("something-else")
+    if err == nil {
+        t.Error("Expected an error and got nil")
+    }
+    if result != nil {
+        t.Error(fmt.Sprintf("Expected nil and instead got %v", result))
     }
 }

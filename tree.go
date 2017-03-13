@@ -3,6 +3,7 @@ package main
 import (
     "os"
     "strings"
+    "errors"
 )
 
 type FileTreeNode struct {
@@ -37,18 +38,17 @@ func NewFileTreeNode(
     }
 }
 
-func (n *FileTreeNode) findDescendant(pathList []string) *FileTreeNode {
+func (n *FileTreeNode) findDescendant(pathList []string) (*FileTreeNode, error) {
     if pathList[0] != n.name {
-        // TODO Error
-        return nil
+        return nil, errors.New("First element in pathList doesn't match this node")
     }
     if len(pathList) == 1 {
-        return n
+        return n, nil
     }
     return n.children[pathList[1]].findDescendant(pathList[1:])
 }
 
-func (n *FileTreeNode) findDescendantStrPath(path string) *FileTreeNode {
+func (n *FileTreeNode) findDescendantStrPath(path string) (*FileTreeNode, error) {
     pathList := strings.Split(path, string(os.PathSeparator))
     return n.findDescendant(pathList)
 }
