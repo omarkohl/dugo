@@ -14,6 +14,7 @@ type FileTreeNode struct {
     cummulativeSize int64
     isDir           bool
     children        map[string]*FileTreeNode
+    parent          *FileTreeNode
 }
 
 // Constructor function for FileTreeNode. Use this instead of instantiating
@@ -23,6 +24,7 @@ func NewFileTreeNode(
     size int64,
     isDir bool,
     children map[string]*FileTreeNode,
+    // TODO parameter parent
 ) *FileTreeNode {
     if children == nil {
         children = make(map[string]*FileTreeNode)
@@ -36,7 +38,8 @@ func NewFileTreeNode(
         size: size,
         cummulativeSize: cummulativeSize,
         isDir: isDir,
-        children: children,
+        children: children,  // TODO child.parent has to be set
+        parent: nil,
     }
 }
 
@@ -121,4 +124,9 @@ func (n *FileTreeNode) criticalPath() []*FileTreeNode {
     } else {
         return res
     }
+}
+
+func (n *FileTreeNode) addChild(child *FileTreeNode) {
+    n.children[child.name] = child
+    child.parent = n
 }
