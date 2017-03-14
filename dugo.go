@@ -64,10 +64,10 @@ func main() {
     // the case of several parameters and file instead of dir as parameter
     fmt.Println("Top 10 directories are:")
     for _, d := range dirs[1:] {
-        fmt.Printf("%s    (%s)\n", d.name, humanizeSize(d.cummulativeSize))
+        fmt.Printf("%-60s%20s\n", d.name, "(" + humanizeSize(d.cummulativeSize) + ")")
     }
-    fmt.Println("Top 10 files are:")
+    fmt.Println("\nTop 10 files are:")
     for _, f := range files {
-        fmt.Printf("%s    (%s)\n", f.name, humanizeSize(f.cummulativeSize))
+        fmt.Printf("%-60s%20s\n", f.name, "(" + humanizeSize(f.cummulativeSize) + ")")
     }
 }
