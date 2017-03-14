@@ -42,7 +42,12 @@ func NewFileTreeNode(
 
 func (n *FileTreeNode) findDescendant(pathList []string) (*FileTreeNode, error) {
     if pathList[0] != n.name {
-        return nil, errors.New("First element in pathList doesn't match this node")
+        errorMsg := fmt.Sprintf(
+            "First element in pathList '%s' does not match %v",
+            pathList[0],
+            n,
+        )
+        return nil, errors.New(errorMsg)
     }
     if len(pathList) == 1 {
         return n, nil
