@@ -242,7 +242,7 @@ func TestAddChild(t *testing.T) {
     dir1 := NewFileTreeNode("dir1", 4096, true, nil)
     file1 := NewFileTreeNode("file1", 8000, false, nil)
     dir1.addChild(file1)
-    expected := []*FileTreeNode{file1}
+    expected := map[string]*FileTreeNode{file1.name: file1}
     if ! reflect.DeepEqual(dir1.children, expected) {
         t.Error(
             fmt.Sprintf(
