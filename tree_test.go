@@ -50,11 +50,10 @@ func TestFindDescendant(t *testing.T) {
     node1 := NewFileTreeNode("asdf", 100, false, nil)
     node2 := NewFileTreeNode("asdf2", 200, false, nil)
     node3 := NewFileTreeNode("asdf3", 200, false, nil)
-    children := make(map[string]*FileTreeNode, 3)
-    children[node1.name] = node1
-    children[node2.name] = node2
-    children[node3.name] = node3
-    dirTest := NewFileTreeNode("test", 4096, true, children)
+    dirTest := NewFileTreeNode("test", 4096, true, nil)
+    dirTest.addChild(node1)
+    dirTest.addChild(node2)
+    dirTest.addChild(node3)
     dirTopLevel := NewFileTreeNode(
         "top-level",
         4096,
@@ -110,8 +109,8 @@ func TestRecalculateCummulativeSize(t *testing.T) {
     dir1 := NewFileTreeNode("dir1", 4096, true, nil)
     dir2 := NewFileTreeNode("dir2", 4096, true, nil)
     file1 := NewFileTreeNode("file1", 800, false, nil)
-    dir1.children[dir2.name] = dir2
-    dir2.children[file1.name] = file1
+    dir1.addChild(dir2)
+    dir2.addChild(file1)
     // Structure: dir1/dir2/file1
     if dir1.cummulativeSize != 4096 {
         t.Error(fmt.Sprintf("Expected 4096 but got %v", dir1.cummulativeSize))
@@ -133,11 +132,11 @@ func TestGetBiggestDirsAndFiles(t *testing.T) {
     dir4 := NewFileTreeNode("dir4", 4096, true, nil)
     file1 := NewFileTreeNode("file1", 8000, false, nil)
     file2 := NewFileTreeNode("file2", 10000, false, nil)
-    dir1.children[dir2.name] = dir2
-    dir1.children[dir3.name] = dir3
-    dir1.children[dir4.name] = dir4
-    dir2.children[file1.name] = file1
-    dir3.children[file2.name] = file2
+    dir1.addChild(dir2)
+    dir1.addChild(dir3)
+    dir1.addChild(dir4)
+    dir2.addChild(file1)
+    dir3.addChild(file2)
     dir1.recalculateCummulativeSize()
     // Structure:
     // dir1
@@ -166,11 +165,11 @@ func TestCriticalPath(t *testing.T) {
     dir4 := NewFileTreeNode("dir4", 4096, true, nil)
     file1 := NewFileTreeNode("file1", 8000, false, nil)
     file2 := NewFileTreeNode("file2", 10000, false, nil)
-    dir1.children[dir2.name] = dir2
-    dir1.children[dir3.name] = dir3
-    dir1.children[dir4.name] = dir4
-    dir2.children[file1.name] = file1
-    dir3.children[file2.name] = file2
+    dir1.addChild(dir2)
+    dir1.addChild(dir3)
+    dir1.addChild(dir4)
+    dir2.addChild(file1)
+    dir3.addChild(file2)
     dir1.recalculateCummulativeSize()
     // Structure:
     // dir1
@@ -192,7 +191,7 @@ func TestCriticalPath(t *testing.T) {
 func TestCriticalPath2(t *testing.T) {
     dir1 := NewFileTreeNode("dir1", 4096, true, nil)
     dir2 := NewFileTreeNode("dir2", 4096, true, nil)
-    dir1.children[dir2.name] = dir2
+    dir1.addChild(dir2)
     for i := 0; i < 10; i++ {
         file := NewFileTreeNode(
             fmt.Sprintf("%s%d", "file", i + 1),
@@ -200,7 +199,7 @@ func TestCriticalPath2(t *testing.T) {
             false,
             nil,
         )
-        dir2.children[file.name] = file
+        dir2.addChild(file)
     }
     dir1.recalculateCummulativeSize()
     // Structure:
@@ -223,8 +222,8 @@ func TestFullPath(t *testing.T) {
     dir1 := NewFileTreeNode("dir1", 4096, true, nil)
     dir2 := NewFileTreeNode("dir2", 4096, true, nil)
     file1 := NewFileTreeNode("file1", 8000, false, nil)
-    dir1.children[dir2.name] = dir2
-    dir2.children[file1.name] = file1
+    dir1.addChild(dir2)
+    dir2.addChild(file1)
     // Structure:
     // dir1
     //   dir2

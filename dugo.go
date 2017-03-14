@@ -26,13 +26,12 @@ func buildTree(root string) (*FileTreeNode, error) {
         } else {
             path = strings.TrimPrefix(path, basePath)
             dir := filepath.Dir(path)
-            base := filepath.Base(path)
             descendant, err := tree.findDescendantStrPath(dir)
             if err != nil {
                 return err
             }
             node := NewFileTreeNode(f.Name(), f.Size(), f.IsDir(), nil)
-            descendant.children[base] = node
+            descendant.addChild(node)
         }
         return nil
     }

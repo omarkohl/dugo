@@ -33,14 +33,18 @@ func NewFileTreeNode(
     for _, v := range children {
         cummulativeSize += v.size
     }
-    return &FileTreeNode{
+    node := &FileTreeNode{
         name: name,
         size: size,
         cummulativeSize: cummulativeSize,
         isDir: isDir,
-        children: children,  // TODO child.parent has to be set
+        children: children,
         parent: nil,
     }
+    for _, v := range children {
+        v.parent = node
+    }
+    return node
 }
 
 func (n *FileTreeNode) findDescendant(pathList []string) (*FileTreeNode, error) {
