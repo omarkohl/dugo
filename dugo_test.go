@@ -25,20 +25,24 @@ func (fs fileInfoMock) Name() string       { return fs.name }
 func TestBuildTree(t *testing.T) {
     // Mock the filepath.Walk function
     oldWalk := Walk
-    defer func() { Walk = oldWalk }()
+    oldAbs := Abs
+    defer func() { Walk = oldWalk; Abs = oldAbs }()
+    Abs = func (path string) (string, error) {
+        return "/fake/root/" + path, nil
+    }
     Walk = func (root string, walkFn filepath.WalkFunc) error {
         walkFn(
-            "example_dir",
+            "/fake/root/example_dir",
             fileInfoMock{name: "example_dir", size: 4096, isDir: true},
             nil,
         )
         walkFn(
-            "example_dir/subdir",
+            "/fake/root/example_dir/subdir",
             fileInfoMock{name: "subdir", size: 4096, isDir: true},
             nil,
         )
         walkFn(
-            "example_dir/subdir/file.txt",
+            "/fake/root/example_dir/subdir/file.txt",
             fileInfoMock{name: "file.txt", size: 308, isDir: false},
             nil,
         )

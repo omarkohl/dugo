@@ -11,10 +11,11 @@ import (
 )
 
 var Walk = filepath.Walk
+var Abs = filepath.Abs
 
 func buildTree(root string) (*FileTreeNode, error) {
     var err error
-    root, err = filepath.Abs(root)
+    root, err = Abs(root)
     if err != nil {
         return nil, err
     }
