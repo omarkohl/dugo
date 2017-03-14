@@ -216,3 +216,22 @@ func TestCriticalPath2(t *testing.T) {
         t.Error(fmt.Sprintf("Expected %v but got %v", expected, cp))
     }
 }
+
+
+// Verify the full path of a node is returned correctly
+func TestFullPath(t *testing.T) {
+    dir1 := NewFileTreeNode("dir1", 4096, true, nil)
+    dir2 := NewFileTreeNode("dir2", 4096, true, nil)
+    file1 := NewFileTreeNode("file1", 8000, false, nil)
+    dir1.children[dir2.name] = dir2
+    dir2.children[file1.name] = file1
+    // Structure:
+    // dir1
+    //   dir2
+    //     file1
+    path := file1.fullPath()
+    expected := "dir1/dir2/file1"
+    if path != expected {
+        t.Fatal(fmt.Sprintf("Expected %s and got %s", expected, path))
+    }
+}
