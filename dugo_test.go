@@ -96,4 +96,8 @@ func TestHumanizeSize(t *testing.T) {
     result = humanizeSize(10002000068)
     expected = "9.3 GB"
     assertEqualStr(t, result, expected)
+
+    result = humanizeSize(10002000068000)
+    expected = "9.1 TB"
+    assertEqualStr(t, result, expected)
 }

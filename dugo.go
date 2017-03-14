@@ -7,6 +7,7 @@ import (
     "flag"
     "strings"
     "strconv"
+    "math"
 )
 
 var Walk = filepath.Walk
@@ -44,7 +45,14 @@ func humanizeSize(bytes int) string {
     if bytes < 1024 {
         return strconv.Itoa(bytes) + " bytes"
     }
-    return ""
+    units := []string{"kB", "MB", "GB", "TB"}
+    for i, u := range units {
+        res := float64(bytes) / math.Pow(1024.0, float64(i + 1))
+        if res < 1024.0 || u == "TB" {
+            return strconv.FormatFloat(res, 'f', 1, 64) + " " + u
+        }
+    }
+    return "ERROR!"  // Should never happen
 }
 
 func main() {
