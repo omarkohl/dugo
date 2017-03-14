@@ -6,6 +6,7 @@ import (
     "os"
     "flag"
     "strings"
+    "strconv"
 )
 
 var Walk = filepath.Walk
@@ -39,10 +40,27 @@ func printTree(tree *FileTreeNode, indent int) {
     }
 }
 
+func humanizeSize(bytes int) string {
+    if bytes < 1024 {
+        return strconv.Itoa(bytes) + " bytes"
+    }
+    return ""
+}
+
 func main() {
     fmt.Println("This is dugo (Disk Usage with Go)!")
     flag.Parse()
     root := flag.Arg(0)
     tree := buildTree(root)
-    printTree(tree, 0)
+    dirs, files := tree.getBiggestDirsAndFiles(11)
+    // Ignore the first dir because it is the root dir. TODO take into account
+    // the case of several parameters and file instead of dir as parameter
+    fmt.Println("Top 10 directories are:")
+    for _, d := range dirs[1:] {
+        fmt.Println(d.name)
+    }
+    fmt.Println("Top 10 files are:")
+    for _, f := range files {
+        fmt.Println(f.name)
+    }
 }

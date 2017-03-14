@@ -64,3 +64,36 @@ func TestBuildTree(t *testing.T) {
         t.Fatal(fmt.Sprintf("Expected 8500 and got %v", tree.cummulativeSize))
     }
 }
+
+
+func assertEqualStr(t *testing.T, result, expected string) {
+    if result != expected {
+        t.Error(fmt.Sprintf("Expected '%s' and got '%s'", expected, result))
+    }
+}
+
+func TestHumanizeSize(t *testing.T) {
+    result := humanizeSize(500)
+    expected := "500 bytes"
+    assertEqualStr(t, result, expected)
+
+    result = humanizeSize(1024)
+    expected = "1.0 kB"
+    assertEqualStr(t, result, expected)
+
+    result = humanizeSize(1050)
+    expected = "1.0 kB"
+    assertEqualStr(t, result, expected)
+
+    result = humanizeSize(21058)
+    expected = "20.6 kB"
+    assertEqualStr(t, result, expected)
+
+    result = humanizeSize(10000068)
+    expected = "9.5 MB"
+    assertEqualStr(t, result, expected)
+
+    result = humanizeSize(10002000068)
+    expected = "9.3 GB"
+    assertEqualStr(t, result, expected)
+}
