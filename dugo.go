@@ -78,11 +78,11 @@ func main() {
     // the case of several parameters and file instead of dir as parameter
     fmt.Println("\nTop 10 directories are:\n")
     for _, d := range dirs[1:] {
-        fmt.Printf("%-60s%20s\n", d.name, "(" + humanizeSize(d.cummulativeSize) + ")")
+        fmt.Printf("%-60s%20s\n", d.fullPath(), "(" + humanizeSize(d.cummulativeSize) + ")")
     }
     fmt.Println("\n\nTop 10 files are:\n")
     for _, f := range files {
-        fmt.Printf("%-60s%20s\n", f.name, "(" + humanizeSize(f.cummulativeSize) + ")")
+        fmt.Printf("%-60s%20s\n", f.fullPath(), "(" + humanizeSize(f.cummulativeSize) + ")")
     }
     criticalPath := dirs[1].criticalPath()
     strCp := ""
