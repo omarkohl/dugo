@@ -5,6 +5,7 @@ import (
     "os"
     "strings"
     "errors"
+    "sort"
 )
 
 type FileTreeNode struct {
@@ -67,8 +68,35 @@ func (n *FileTreeNode) recalculateCummulativeSize() {
     n.cummulativeSize = total
 }
 
+func min(a, b int) int {
+    if (a < b) {
+        return a
+    }
+    return b
+}
+
+// Type to implement sort.Interface
+type BySize []*FileTreeNode
+func (a BySize) Len() int           { return len(a) }
+func (a BySize) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a BySize) Less(i, j int) bool { return a[i].cummulativeSize < a[j].cummulativeSize}
+
 func (n *FileTreeNode) getBiggestDirsAndFiles(count int) ([]*FileTreeNode, []*FileTreeNode){
-    topDirs := make([]*FileTreeNode, count)
-    topFiles := make([]*FileTreeNode, count)
-    return topDirs, topFiles
+    var allDirs []*FileTreeNode
+    var allFiles []*FileTreeNode
+    var iterator func(node *FileTreeNode)
+    iterator = func(node *FileTreeNode) {
+        if node.isDir {
+            allDirs = append(allDirs, node)
+        } else {
+            allFiles = append(allFiles, node)
+        }
+        for _, child := range node.children {
+            iterator(child)
+        }
+    }
+    iterator(n)
+    sort.Sort(sort.Reverse(BySize(allDirs)))
+    sort.Sort(sort.Reverse(BySize(allFiles)))
+    return allDirs[:min(len(allDirs), count)], allFiles[:min(len(allFiles), count)]
 }
