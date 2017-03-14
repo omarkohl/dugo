@@ -44,7 +44,10 @@ func TestBuildTree(t *testing.T) {
         )
         return nil
     }
-    tree := buildTree("example_dir")
+    tree, err := buildTree("example_dir")
+    if err != nil {
+        t.Fatal("Expected nil and and got", err)
+    }
     if tree == nil {
         t.Fatal("Expected a tree and got nil")
     }
