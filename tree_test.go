@@ -158,6 +158,7 @@ func TestGetBiggestDirsAndFiles(t *testing.T) {
 }
 
 
+// Verify the expected criticalPath is returned
 func TestCriticalPath(t *testing.T) {
     dir1 := NewFileTreeNode("dir1", 4096, true, nil)
     dir2 := NewFileTreeNode("dir2", 4096, true, nil)
@@ -180,6 +181,37 @@ func TestCriticalPath(t *testing.T) {
     //   dir4
     cp := dir1.criticalPath()
     expected := []*FileTreeNode{dir1, dir3, file2}
+    if ! reflect.DeepEqual(cp, expected) {
+        t.Error(fmt.Sprintf("Expected %v but got %v", expected, cp))
+    }
+}
+
+
+// Verify only files/dirs with at least 30% of the parent's size are
+// part of the critical path
+func TestCriticalPath2(t *testing.T) {
+    dir1 := NewFileTreeNode("dir1", 4096, true, nil)
+    dir2 := NewFileTreeNode("dir2", 4096, true, nil)
+    dir1.children[dir2.name] = dir2
+    for i := 0; i < 10; i++ {
+        file := NewFileTreeNode(
+            fmt.Sprintf("%s%d", "file", i + 1),
+            8000,
+            false,
+            nil,
+        )
+        dir2.children[file.name] = file
+    }
+    dir1.recalculateCummulativeSize()
+    // Structure:
+    // dir1
+    //   dir2
+    //     file1
+    //     file2
+    //     ...
+    //     file10
+    cp := dir1.criticalPath()
+    expected := []*FileTreeNode{dir1, dir2}  // No files included
     if ! reflect.DeepEqual(cp, expected) {
         t.Error(fmt.Sprintf("Expected %v but got %v", expected, cp))
     }

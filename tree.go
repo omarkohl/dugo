@@ -100,3 +100,20 @@ func (n *FileTreeNode) getBiggestDirsAndFiles(count int) ([]*FileTreeNode, []*Fi
     sort.Sort(sort.Reverse(BySize(allFiles)))
     return allDirs[:min(len(allDirs), count)], allFiles[:min(len(allFiles), count)]
 }
+
+func (n *FileTreeNode) criticalPath() []*FileTreeNode {
+    res := []*FileTreeNode{n}
+    var children []*FileTreeNode
+    if len(n.children) == 0 {
+        return res
+    }
+    for  _, value := range n.children {
+        children = append(children, value)
+    }
+    sort.Sort(sort.Reverse(BySize(children)))
+    if float64(children[0].cummulativeSize) / float64(n.cummulativeSize) >= 0.3 {
+        return append(res, children[0].criticalPath()...)
+    } else {
+        return res
+    }
+}
