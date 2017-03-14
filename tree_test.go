@@ -235,3 +235,31 @@ func TestFullPath(t *testing.T) {
         t.Fatal(fmt.Sprintf("Expected %s and got %s", expected, path))
     }
 }
+
+
+// Verify addChild adds the node to children[] and sets the parent
+// attribute of the node
+func TestAddChild(t *testing.T) {
+    dir1 := NewFileTreeNode("dir1", 4096, true, nil)
+    file1 := NewFileTreeNode("file1", 8000, false, nil)
+    dir1.addChild(file1)
+    expected := []*FileTreeNode{file1}
+    if ! reflect.DeepEqual(dir1.children, expected) {
+        t.Error(
+            fmt.Sprintf(
+                "Expected %v but got %v",
+                expected,
+                dir1.children,
+            ),
+        )
+    }
+    if file1.parent != dir1 {
+        t.Error(
+            fmt.Sprintf(
+                "Expected %v but got %v",
+                dir1,
+                file1.parent,
+            ),
+        )
+    }
+}
