@@ -76,11 +76,11 @@ func main() {
     dirs, files := tree.getBiggestDirsAndFiles(11)
     // Ignore the first dir because it is the root dir. TODO take into account
     // the case of several parameters and file instead of dir as parameter
-    fmt.Println("\n\nTop 10 directories are:")
+    fmt.Println("\nTop 10 directories are:\n")
     for _, d := range dirs[1:] {
         fmt.Printf("%-60s%20s\n", d.name, "(" + humanizeSize(d.cummulativeSize) + ")")
     }
-    fmt.Println("\nTop 10 files are:")
+    fmt.Println("\n\nTop 10 files are:\n")
     for _, f := range files {
         fmt.Printf("%-60s%20s\n", f.name, "(" + humanizeSize(f.cummulativeSize) + ")")
     }
@@ -93,11 +93,9 @@ func main() {
     if lastElement.isDir {
         strCp += "/"
     }
-    fmt.Println(
-        fmt.Sprintf(
-            "The critical path is: %s (%s)",
-            strCp,
-            humanizeSize(lastElement.cummulativeSize),
-        ),
+    fmt.Printf(
+        "\n\nThe critical path is:\n%s (%s)\n",
+        strCp,
+        humanizeSize(lastElement.cummulativeSize),
     )
 }
