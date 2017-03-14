@@ -1,0 +1,24 @@
+- Use logging instead of fmt.Print*
+
+- Improve structure of project by grouping things more logically
+
+- Deal with output bigger than 80 characters. For example display first 20 and
+  last 40 characters and ... in between
+
+- Accept multiple command line parameters
+
+- Accept a single file as command line parameter
+
+- Deal with file system errors such as permission denied etc.
+
+- Display several critical paths if several directories with similar sizes exist
+
+- Make tool interactive to allow querying for interesting data after building the tree
+
+- Add option to exclude paths
+
+- Optional: Generate HTML report
+
+- Test performance with big and deep directory trees. Sorting of files possibly needs optimization.
+
+- Can performance be improved by using goroutines? Every routine could build/analyze a part of the tree
