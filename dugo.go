@@ -70,4 +70,20 @@ func main() {
     for _, f := range files {
         fmt.Printf("%-60s%20s\n", f.name, "(" + humanizeSize(f.cummulativeSize) + ")")
     }
+    criticalPath := dirs[1].criticalPath()
+    strCp := ""
+    for _, v := range criticalPath {
+        strCp += "/" + v.name
+    }
+    lastElement := criticalPath[len(criticalPath) - 1]
+    if lastElement.isDir {
+        strCp += "/"
+    }
+    fmt.Println(
+        fmt.Sprintf(
+            "The critical path is: %s (%s)",
+            strCp,
+            humanizeSize(lastElement.cummulativeSize),
+        ),
+    )
 }
