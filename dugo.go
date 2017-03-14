@@ -41,9 +41,9 @@ func printTree(tree *FileTreeNode, indent int) {
     }
 }
 
-func humanizeSize(bytes int) string {
+func humanizeSize(bytes int64) string {
     if bytes < 1024 {
-        return strconv.Itoa(bytes) + " bytes"
+        return strconv.FormatInt(bytes, 10) + " bytes"
     }
     units := []string{"kB", "MB", "GB", "TB"}
     for i, u := range units {
@@ -56,7 +56,6 @@ func humanizeSize(bytes int) string {
 }
 
 func main() {
-    fmt.Println("This is dugo (Disk Usage with Go)!")
     flag.Parse()
     root := flag.Arg(0)
     tree := buildTree(root)
@@ -65,10 +64,10 @@ func main() {
     // the case of several parameters and file instead of dir as parameter
     fmt.Println("Top 10 directories are:")
     for _, d := range dirs[1:] {
-        fmt.Println(d.name)
+        fmt.Printf("%s    (%s)\n", d.name, humanizeSize(d.cummulativeSize))
     }
     fmt.Println("Top 10 files are:")
     for _, f := range files {
-        fmt.Println(f.name)
+        fmt.Printf("%s    (%s)\n", f.name, humanizeSize(f.cummulativeSize))
     }
 }
