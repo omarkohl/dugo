@@ -12,26 +12,30 @@ import (
 
 var Walk = filepath.Walk
 
-func buildTree(root string) *FileTreeNode {
+func buildTree(root string) (*FileTreeNode, error) {
     var tree *FileTreeNode
     visit := func (path string, f os.FileInfo, err error) error {
         if path == root {
-            tree = NewFileTreeNode(f.Name(), f.Size(), f.IsDir(), nil)
+            tree = NewFileTreeNode(path, f.Size(), f.IsDir(), nil)
         } else {
             dir := filepath.Dir(path)
             base := filepath.Base(path)
+            fmt.Println("path", path, "dir", dir, "base", base, "name", tree.name)
             descendant, err := tree.findDescendantStrPath(dir)
             if err != nil {
-                fmt.Printf("Error! %v\n", err)
+                return err
             }
             node := NewFileTreeNode(f.Name(), f.Size(), f.IsDir(), nil)
             descendant.children[base] = node
         }
         return nil
     }
-    Walk(root, visit)
+    err := Walk(root, visit)
+    if err != nil {
+        return nil, err
+    }
     tree.recalculateCummulativeSize()
-    return tree
+    return tree, nil
 }
 
 func printTree(tree *FileTreeNode, indent int) {
@@ -58,7 +62,11 @@ func humanizeSize(bytes int64) string {
 func main() {
     flag.Parse()
     root := flag.Arg(0)
-    tree := buildTree(root)
+    tree, err := buildTree(root)
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "error: %v\n", err)
+        os.Exit(1)
+    }
     dirs, files := tree.getBiggestDirsAndFiles(11)
     // Ignore the first dir because it is the root dir. TODO take into account
     // the case of several parameters and file instead of dir as parameter
