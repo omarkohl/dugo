@@ -134,3 +134,11 @@ func (n *FileTreeNode) addChild(child *FileTreeNode) {
     n.children[child.name] = child
     child.parent = n
 }
+
+func (n *FileTreeNode) fullPath() string {
+    path := ""
+    if n.parent != nil {
+        path += n.parent.fullPath() + "/"
+    }
+    return path + n.name
+}
